@@ -309,5 +309,29 @@ document.getElementById('hamburger').addEventListener('click',function(){documen
 const observer=new IntersectionObserver((e)=>{e.forEach(x=>{if(x.isIntersecting)x.target.classList.add('in-view');});},{threshold:0.1});
 document.querySelectorAll('.fade-up').forEach(el=>observer.observe(el));
 </script>
+    <script>
+// ============================================================
+// じーむれす トラッキング（ポスティング方式）
+// ============================================================
+(function() {
+  // URLパラメータから顧客IDを取得（例：?id=001）
+  const params = new URLSearchParams(window.location.search);
+  const clientId = params.get('3');
+  if (!clientId) return; // IDがなければ何もしない
+
+  // デバイス判定
+  const ua = navigator.userAgent.toLowerCase();
+  const device = /iphone/.test(ua) || (/android/.test(ua) && /mobile/.test(ua))
+    ? 'スマホ'
+    : /ipad/.test(ua) ? 'タブレット' : 'PC';
+
+  // GASにトラッキング送信（no-corsで飛ばすだけ）
+  const GAS_URL = 'https://script.google.com/macros/s/AKfycbztrCpHmIoaZKkX-T-hEByJv9ToQRpeMdLSRxyEFbpqwkaT5-gF18fMg53sLxCapg-lnQ/exec';
+  fetch(`${GAS_URL}?id=${clientId}&device=${encodeURIComponent(device)}`, {
+    method: 'GET',
+    mode: 'no-cors' // CORSエラーを回避
+  });
+})();
+</script>
 </body>
 </html>
